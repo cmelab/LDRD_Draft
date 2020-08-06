@@ -1,0 +1,84 @@
+% Run 0
+temp = 66
+chemical_potentials = [ 0, 33, 66, 133, 166, 199, 233, 266, 299]
+The production runs barfed due to project.py not being written correctly. I presented the equilibrium runs from the total energy plots where it was obvious $\mu$ = 
+[33](https://files.slack.com/files-pri/TF1GZNR6W-F0181USUZLL/image.png), 
+[199](https://files.slack.com/files-pri/TF1GZNR6W-F017F1HTAUX/image.png), and 
+[299](https://files.slack.com/files-pri/TF1GZNR6W-F017F1JHUCX/image.png) kJ/mol were not fully equilibrated. 
+
+[Adsorption Isotherm, N v P](https://files.slack.com/files-pri/TF1GZNR6W-F018KJ6MBDE/image.png)
+
+Notes from Eric:
+ - So the N vs P is pretty noisy, but that's not really here nor there since I expect there's really high uncertainty in the pressure calculations. Also, those pressures are REALLY high, so if we think they're right then we can maybe calm it down on shoving chemical potential up so high
+ - Rearranging so it's N vs mu in my head is less noisy, but the qualitative trend is right
+ - Having the standard deviation in N for the equilibrated part of the trajectory will be key here.
+ - So we'll calculate that in the next steps
+ - For the Total Energy trajectories, the Mu=33 definitely needs to run longer
+ - the 199 and 299 cases might be fine after 2e7 steps, but also those slumps before the last 2e7 steps are sad newses: Classic slow-to equilibrate dynamics.
+ - It'll be good to take a closer peek at these trajectories and also check the lit  about pumping up pressure to adsorb small molecules on surfaces: Are there examples of ethane on other surfaces people have studied?
+
+% Run 1
+temp = 66
+chemical_potentials = [ 100, 150, 200, 350, 400, 450, 600] 
+
+Some of the chemical potentials barfed, so data is not a complete picture, but it was noted that the pressures are really high. Also curious why we used such high chemical potentials when they're note seemingly based in reality.
+
+[Adsorption Isotherm, N v P](https://files.slack.com/files-pri/TF1GZNR6W-F017UBFDG7Q/image.png)
+
+Notes from Eric:
+ - Turn down chemical potential until ethanes start coming off the surface
+ - Try higher temperatures
+ - Run these 2 parameter sweeps with MC:
+ - Chem potential of zero --> # of molecules as a function of T. Sweep form temps of 66 - 833 (5 - 10 temps in this range). # of surface molecules should decrease as T increases
+ - Pick a middle temp (400K) and sweep over chemical potentials of 0 - 10
+ - Start job with negative chemical potential, -100 (maybe tack onto 400 K run?)
+
+% Run 2
+temperatures = [ 66, 151, 236, 321, 406, 492, 577, 662, 747, 833]
+chem_pot = 0
+
+Slight trend in the isotherm, that's not really an isotherm so it's a bit curious why there's a trend
+
+[Adsorption Isotherm, N v P](https://files.slack.com/files-pri/TF1GZNR6W-F017RU76FRD/image.png)
+
+[P v T, with error bars](https://files.slack.com/files-pri/TF1GZNR6W-F0185NB8LBX/image.png)
+
+[N v T, with error bars](https://files.slack.com/files-pri/TF1GZNR6W-F0185ND378V/image.png)
+
+Notes from Eric:
+ - I'm surprised how little N changes (Mike)
+ - The pressure plot still doesn't make great sense to me yet: the higher pressures at Lower T don't check out, but we can set that aside for the moment
+ - The lower N at higher T, for constant mu (N v T) looks sensible
+ - Let's crank up T a bit more and do that T sweep again at a $\mu$ that we think will lower the number of ethane on the surface (TODO) 
+
+% Run 3
+temp = 406
+chemical_potentials = [ -100, 1,  2,  3,  4,  5,  6,  7,  8,  9, 10]
+
+The negative chemical potential did not make it, ended up being due to a bug within Cassandra, but submitted an issue to mosdef_cassandra all the same. Found a work around that isn't impeding other data so will utilize that in the meantime. 
+
+[Adsorption Isotherm, N v P](https://files.slack.com/files-pri/TF1GZNR6W-F018Z0GQKGQ/image.png)
+
+[P v $\mu$, with error bars](https://files.slack.com/files-pri/TF1GZNR6W-F018FAP8THS/image.png)
+
+[N v $\mu$, with error bars](https://files.slack.com/files-pri/TF1GZNR6W-F0189B9RPHR/image.png)
+
+Notes from Eric:
+ - the N vs $\mu$ plot from $\mu$ = 1:10 looks better than our prior calcs- nice
+ - Still a little surprised that it doesn't dip below 40's.
+ - I'm curious to see a sweep of $\mu$ from -10 to 10 for T=800
+
+% Run 4
+temp = 800
+chemical_potentials = [-10,  -7,  -5,  -3,  -1,   1,   3,   5,   7,  10] 
+
+Fixed the negative numbers barfing on their production runs so we can evaluate whether 
+
+[Adsorption Isotherm, N v P](https://files.slack.com/files-pri/TF1GZNR6W-F0184QY3A4W/image.png)
+
+[P v $\mu$, with error bars](https://files.slack.com/files-pri/TF1GZNR6W-F017WQLSP6K/image.png)
+
+[N v $\mu$, with error bars](https://files.slack.com/files-pri/TF1GZNR6W-F018BHA5BHQ/image.png)
+
+Notes from Eric: (More discussion in 8-6 Etherpad)
+ - Look at that trend! (RE: N v $\mu$)
